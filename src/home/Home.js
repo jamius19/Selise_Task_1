@@ -159,7 +159,7 @@ class Home extends Component {
 
                                 <div className="order-1 order-lg-1 col-6 col-lg-3 my-lg-0">
                                     <div className={styles.pagination_info}>
-                                        Showing &nbsp;{parseInt(this.state.start + 1)} - {parseInt(this.state.start + this.state.perPage)} of {this.state.matches.length}
+                                        Showing &nbsp;{parseInt(this.state.start + 1)} - {Math.max(parseInt(this.state.start + this.state.perPage), this.state.matches.length)} of {this.state.matches.length}
                                     </div>
                                 </div>
 
