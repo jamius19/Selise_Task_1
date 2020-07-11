@@ -1,5 +1,5 @@
 ### This is the Task 1 from Selise Assessment Test.
-##### Premier League score.
+##### Premier League score website.
 
 ---
 A running demo of this site can be found here, [https://selise-task-1.netlify.app](https://selise-task-1.netlify.app/)
