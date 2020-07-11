@@ -1,19 +1,15 @@
 import React, {Component} from 'react';
 import Dropdown from 'react-dropdown';
-import {
-    Link,
-    withRouter
-} from "react-router-dom";
-
-import {getCookie, setCookie, deleteCookie} from "../util/UtilityFunc";
+import {Link, withRouter} from "react-router-dom";
+import ResultTable from "../components/ResultTable/ResultTable";
+import {getCookie, setCookie} from "../util/UtilityFunc";
 
 // Importing Assets
 import styles from './Home.module.scss';
-import ResultTable from "../components/ResultTable/ResultTable";
-
 import premierLeagueLogo from './assets/banner_premier_league.svg';
+import Helmet from "react-helmet";
 
-const options = [
+const ITEMS_PER_PAGE = [
     '10', '20', '30'
 ]
 
@@ -23,28 +19,34 @@ class Home extends Component {
     constructor(props) {
         super(props);
 
+        // Setting up Variables
         this.state = {
             fetchComplete: false,
-            error: false
+            error: false,
+            showModal: false,
+            modalInfo: {}
         };
 
         this.restEndpoint = "https://raw.githubusercontent.com/openfootball/football.json/master/2015-16/en.1.json";
 
+        // Binding function this context
         this.onChangeItemCount = this.onChangeItemCount.bind(this);
     }
 
     componentDidUpdate(prevProps) {
         if (this.props.location !== prevProps.location) {
+            // Retrieving and parsing cookie if exists
             let perPageCount = getCookie('perPage') ? getCookie('perPage') : 10;
             perPageCount = parseInt(perPageCount);
 
-
+            // Updating data as the URL has been changed
             if (Object.keys(this.props.match.params).length !== 0) {
                 this.setState({
                     start: (parseInt(this.props.match.params["pageNo"]) - 1) * perPageCount,
                     currentPage: parseInt(this.props.match.params["pageNo"])
                 })
             } else {
+                // If no page number is found, then assume we're on the homepage
                 this.setState({
                     start: 0,
                     currentPage: 1,
@@ -52,11 +54,13 @@ class Home extends Component {
                 });
             }
 
+            // After loading new data, scroll back to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     }
 
     componentDidMount() {
+        // Fetching the data from JSON file
         fetch(this.restEndpoint)
             .then(res => res.json())
             .then((parsedData) => {
@@ -64,6 +68,7 @@ class Home extends Component {
                 let perPageCount = getCookie('perPage') ? getCookie('perPage') : 10;
                 perPageCount = parseInt(perPageCount);
 
+                // Initial Variable Setup
                 this.setState({
                     data: parsedData,
                     matches: this.parseMatches(parsedData),
@@ -73,7 +78,7 @@ class Home extends Component {
                     perPage: perPageCount,
                 });
 
-
+                // Setting current page number
                 if (Object.keys(this.props.match.params).length !== 0) {
                     this.setState({
                         start: (parseInt(this.props.match.params["pageNo"]) - 1) * perPageCount,
@@ -92,6 +97,7 @@ class Home extends Component {
     }
 
     onChangeItemCount(count) {
+        // Saving this info on the cookie
         setCookie("perPage", count.value);
 
         this.setState({
@@ -99,12 +105,33 @@ class Home extends Component {
         });
     }
 
+    // Extract match data from the raw data
+    parseMatches(parsedData) {
+        let matches = [];
+
+        parsedData.rounds.map(value => {
+            matches.push(...value.matches)
+        });
+
+        return matches;
+    }
+
     render() {
         return (
             <main className="container mt-4" style={{marginBottom: '150px'}}>
                 {(() => this.state.fetchComplete ? (
 
-                    <div className="">
+                    <div>
+                        {(() => this.state.currentPage !== 1 ? (
+                            <Helmet>
+                                <title>{`Premier League Score - Page ${this.state.currentPage}`}</title>
+                            </Helmet>
+                        ): (
+                            <Helmet>
+                                <title>{"Premier League Score"}</title>
+                            </Helmet>
+                        ))()}
+
                         <Link to={"/"}>
                             <img className={styles.banner} src={premierLeagueLogo} alt=""/>
                             <h2 className={styles.banner_title}>{this.state.data.name}</h2>
@@ -125,7 +152,7 @@ class Home extends Component {
                                                  controlClassName={styles.dropdown}
                                                  menuClassName={styles.dropdown_menu}
                                                  onChange={this.onChangeItemCount}
-                                                 options={options} value={`${this.state.perPage}`}
+                                                 options={ITEMS_PER_PAGE} value={`${this.state.perPage}`}
                                                  placeholder="Select an option"/>
                                    </div>
                                </div>
@@ -189,16 +216,6 @@ class Home extends Component {
                     <h5 className="text-center">Loading. Please Wait.</h5>)()}
             </main>
         );
-    }
-
-    parseMatches(parsedData) {
-        let matches = [];
-
-        parsedData.rounds.map(value => {
-            matches.push(...value.matches)
-        });
-
-        return matches;
     }
 }
 

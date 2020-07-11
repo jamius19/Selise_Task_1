@@ -3,6 +3,10 @@ import React from 'react';
 import trophy_icon from './assets/trophy_icon.png';
 import styles from './ResultTable.module.scss';
 
+
+/* Stateless react component for showing the
+ * table containing all the data for teams.
+ */
 function ResultTable(props) {
     return (
         <div>
