@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
+import {BrowserRouter as Router, Switch, Route, Link} from "react-router-dom";
 import Home from "./home/Home";
 
 // Importing Global Style Overrides
@@ -20,7 +20,9 @@ function App() {
                 </Route>
 
                 <Route path="*">
-                    Wrong Path.
+                   <div className="container mt-4">
+                      <h4> Wrong Path. Go back to <Link to={"/"}>Home?</Link></h4>
+                   </div>
                 </Route>
             </Switch>
         </Router>

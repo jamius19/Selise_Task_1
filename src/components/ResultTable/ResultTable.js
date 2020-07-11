@@ -52,7 +52,6 @@ function ResultTable(props) {
                                                     className={`${styles.trophy_icon} mr-2 ${draw ? "d-none" : (team1Won ? "" : "d-none")}`}
                                                     src={trophy_icon} alt="trophy_icon"/>
                                                 <a href="#"
-                                                   onClick={() => props.modalHandler(value.team1.key)}
                                                    className={styles.team}>{value.team1.name}</a>
                                             </div>
 
@@ -61,7 +60,6 @@ function ResultTable(props) {
 
                                             <div className="col-lg-5">
                                                 <a href="#"
-                                                   onClick={() => props.modalHandler(value.team2.key)}
                                                    className={styles.team}>{value.team2.name}</a>
                                                 <img
                                                     className={`${styles.trophy_icon} ml-2 ${draw ? "d-none" : (team1Won ? "d-none" : "")}`}
