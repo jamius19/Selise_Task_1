@@ -42,7 +42,7 @@ class Home extends Component {
             // Updating data as the URL has been changed
             if (Object.keys(this.props.match.params).length !== 0) {
                 this.setState({
-                    start: (parseInt(this.props.match.params["pageNo"]) - 1) * perPageCount,
+                    start: Math.min((parseInt(this.props.match.params["pageNo"]) - 1) * perPageCount, this.state.matches.length),
                     currentPage: parseInt(this.props.match.params["pageNo"])
                 })
             } else {
@@ -55,7 +55,7 @@ class Home extends Component {
             }
 
             // After loading new data, scroll back to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.scrollTo({top: 0, behavior: 'smooth'});
         }
     }
 
@@ -68,10 +68,12 @@ class Home extends Component {
                 let perPageCount = getCookie('perPage') ? getCookie('perPage') : 10;
                 perPageCount = parseInt(perPageCount);
 
+                let matches = this.parseMatches(parsedData);
+
                 // Initial Variable Setup
                 this.setState({
                     data: parsedData,
-                    matches: this.parseMatches(parsedData),
+                    matches: matches,
                     fetchComplete: true,
                     start: 0,
                     currentPage: 1,
@@ -81,7 +83,7 @@ class Home extends Component {
                 // Setting current page number
                 if (Object.keys(this.props.match.params).length !== 0) {
                     this.setState({
-                        start: (parseInt(this.props.match.params["pageNo"]) - 1) * perPageCount,
+                        start: Math.min((parseInt(this.props.match.params["pageNo"]) - 1) * perPageCount, matches.length),
                         currentPage: parseInt(this.props.match.params["pageNo"])
                     })
                 }
@@ -126,7 +128,7 @@ class Home extends Component {
                             <Helmet>
                                 <title>{`Premier League Score - Page ${this.state.currentPage}`}</title>
                             </Helmet>
-                        ): (
+                        ) : (
                             <Helmet>
                                 <title>{"Premier League Score"}</title>
                             </Helmet>
@@ -145,21 +147,21 @@ class Home extends Component {
                         <div className="mt-4">
                             <div className="row justify-content-lg-end">
 
-                               <div className="order-2 order-lg-0 col-6 col-sm-5 col-md-4 col-lg-3">
-                                   <div className="d-flex">
-                                       <span className="text-weight-bold">Items per page</span>
-                                       <Dropdown className="ml-2 position-relative"
-                                                 controlClassName={styles.dropdown}
-                                                 menuClassName={styles.dropdown_menu}
-                                                 onChange={this.onChangeItemCount}
-                                                 options={ITEMS_PER_PAGE} value={`${this.state.perPage}`}
-                                                 placeholder="Select an option"/>
-                                   </div>
-                               </div>
+                                <div className="order-2 order-lg-0 col-6 col-sm-5 col-md-4 col-lg-3">
+                                    <div className="d-flex">
+                                        <span className="text-weight-bold">Items per page</span>
+                                        <Dropdown className="ml-2 position-relative"
+                                                  controlClassName={styles.dropdown}
+                                                  menuClassName={styles.dropdown_menu}
+                                                  onChange={this.onChangeItemCount}
+                                                  options={ITEMS_PER_PAGE} value={`${this.state.perPage}`}
+                                                  placeholder="Select an option"/>
+                                    </div>
+                                </div>
 
                                 <div className="order-1 order-lg-1 col-6 col-lg-3 my-lg-0">
                                     <div className={styles.pagination_info}>
-                                        Showing &nbsp;{parseInt(this.state.start + 1)} - {Math.min(parseInt(this.state.start + this.state.perPage), this.state.matches.length)} of {this.state.matches.length}
+                                        Showing &nbsp;{Math.min(this.state.start + 1, this.state.matches.length)} - {Math.min(parseInt(this.state.start + this.state.perPage), this.state.matches.length)} of {this.state.matches.length}
                                     </div>
                                 </div>
 
