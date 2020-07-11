@@ -139,7 +139,7 @@ class Home extends Component {
 
                         <div className="mt-5">
                             <ResultTable
-                                matches={this.state.matches.slice(this.state.start, this.state.start + this.state.perPage)}/>
+                                matches={this.state.matches.slice(this.state.start, Math.min(parseInt(this.state.start + this.state.perPage), this.state.matches.length))}/>
                         </div>
 
                         <div className="mt-4">
@@ -169,39 +169,39 @@ class Home extends Component {
                                             return this.state.currentPage > 1 ? (
                                                 <React.Fragment>
                                                     <Link to={`/`}>
-                                                        <i className="fas fa-angle-double-left mr-4"></i>
+                                                        <i className="fas fa-angle-double-left mr-4"/>
                                                     </Link>
 
                                                     <Link to={`/page/${this.state.currentPage - 1}`}>
-                                                        <i className="fas fa-angle-left mr-4"></i>
+                                                        <i className="fas fa-angle-left mr-4"/>
                                                     </Link>
                                                 </React.Fragment>
                                             ) : (
                                                 <React.Fragment>
-                                                    <i className={`fas fa-angle-double-left mr-4 ${styles.disabled}`}></i>
+                                                    <i className={`fas fa-angle-double-left mr-4 ${styles.disabled}`}/>
 
-                                                    <i className={`fas fa-angle-left mr-4 ${styles.disabled}`}></i>
+                                                    <i className={`fas fa-angle-left mr-4 ${styles.disabled}`}/>
                                                 </React.Fragment>
                                             );
                                         })()}
 
                                         {(() => {
-                                            return parseInt(this.state.matches.length / this.state.perPage) !== this.state.currentPage ? (
+                                            return Math.ceil(this.state.matches.length / this.state.perPage) > this.state.currentPage ? (
                                                 <React.Fragment>
                                                     <Link to={`/page/${this.state.currentPage + 1}`}>
-                                                        <i className="fas fa-angle-right mr-4"></i>
+                                                        <i className="fas fa-angle-right mr-4"/>
                                                     </Link>
 
                                                     <Link
-                                                        to={`/page/${parseInt(this.state.matches.length / this.state.perPage)}`}>
-                                                        <i className="fas fa-angle-double-right"></i>
+                                                        to={`/page/${Math.ceil(this.state.matches.length / this.state.perPage)}`}>
+                                                        <i className="fas fa-angle-double-right"/>
                                                     </Link>
                                                 </React.Fragment>
                                             ) : (
                                                 <React.Fragment>
-                                                    <i className={`fas fa-angle-right mr-4 ${styles.disabled}`}></i>
+                                                    <i className={`fas fa-angle-right mr-4 ${styles.disabled}`}/>
 
-                                                    <i className={`fas fa-angle-double-right ${styles.disabled}`}></i>
+                                                    <i className={`fas fa-angle-double-right ${styles.disabled}`}/>
 
                                                 </React.Fragment>
                                             );
